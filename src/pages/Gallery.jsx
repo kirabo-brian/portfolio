@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
-import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 
 import GalleryLightbox from "../components/gallery/GalleryLightbox";
@@ -369,9 +368,6 @@ export default function Gallery() {
 
   return (
     <div className="min-h-screen text-white">
-
-      <Navbar />
-
 
       {/* =====================================================
           HERO

@@ -1,3 +1,5 @@
+
+
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -19,11 +21,17 @@ export default function Navbar() {
   return (
     <header
       className="
-        sticky
+        fixed
         top-0
-        z-[100]
+        left-0
+        right-0
+        z-[200]
+
+        w-full
+
         border-b
         border-gray-800
+
         bg-black/85
         backdrop-blur-xl
       "
@@ -69,7 +77,9 @@ export default function Navbar() {
               text-lg
               sm:text-xl
               md:text-2xl
-              font-black
+              font-white
+              font-semibold
+              text-white
               truncate
             "
           >

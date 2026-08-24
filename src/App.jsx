@@ -1,12 +1,23 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+
+import {
+  AnimatePresence,
+  motion,
+} from "framer-motion";
 
 import Background from "./components/layout/Background";
+import Navbar from "./components/layout/Navbar";
 import ScrollToTop from "./components/layout/ScrollToTop";
 
 import Home from "./pages/Home";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
+
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -17,6 +28,9 @@ function AnimatedRoutes() {
         location={location}
         key={location.pathname}
       >
+
+        {/* HOME */}
+
         <Route
           path="/"
           element={
@@ -25,14 +39,17 @@ function AnimatedRoutes() {
                 opacity: 0,
                 y: 20,
               }}
+
               animate={{
                 opacity: 1,
                 y: 0,
               }}
+
               exit={{
                 opacity: 0,
                 y: -20,
               }}
+
               transition={{
                 duration: 0.35,
                 ease: "easeOut",
@@ -43,6 +60,9 @@ function AnimatedRoutes() {
           }
         />
 
+
+        {/* GALLERY */}
+
         <Route
           path="/gallery"
           element={
@@ -51,14 +71,17 @@ function AnimatedRoutes() {
                 opacity: 0,
                 y: 20,
               }}
+
               animate={{
                 opacity: 1,
                 y: 0,
               }}
+
               exit={{
                 opacity: 0,
                 y: -20,
               }}
+
               transition={{
                 duration: 0.35,
                 ease: "easeOut",
@@ -69,6 +92,9 @@ function AnimatedRoutes() {
           }
         />
 
+
+        {/* CONTACT */}
+
         <Route
           path="/contact"
           element={
@@ -77,14 +103,17 @@ function AnimatedRoutes() {
                 opacity: 0,
                 y: 20,
               }}
+
               animate={{
                 opacity: 1,
                 y: 0,
               }}
+
               exit={{
                 opacity: 0,
                 y: -20,
               }}
+
               transition={{
                 duration: 0.3,
                 ease: "easeOut",
@@ -94,10 +123,12 @@ function AnimatedRoutes() {
             </motion.div>
           }
         />
+
       </Routes>
     </AnimatePresence>
   );
 }
+
 
 function App() {
   return (
@@ -105,15 +136,45 @@ function App() {
 
       <ScrollToTop />
 
-      <div className="relative min-h-screen isolate">
+      <div
+        className="
+          relative
+          min-h-screen
+        "
+      >
 
-        {/* Persistent Background */}
-        <div className="fixed inset-0 z-0">
+        {/* ============================================
+            PERSISTENT BACKGROUND
+        ============================================ */}
+
+        <div
+          className="
+            fixed
+            inset-0
+            z-0
+          "
+        >
           <Background />
         </div>
 
-        {/* Page Content */}
-        <div className="relative z-10">
+
+        {/* ============================================
+            PERSISTENT NAVBAR
+        ============================================ */}
+        
+        <Navbar />
+
+
+        {/* ============================================
+            PAGE CONTENT
+        ============================================ */}
+
+        <div
+          className="
+            relative
+            z-10
+          "
+        >
           <AnimatedRoutes />
         </div>
 
@@ -122,5 +183,6 @@ function App() {
     </BrowserRouter>
   );
 }
+
 
 export default App;
