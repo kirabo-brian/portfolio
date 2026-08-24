@@ -1,4 +1,4 @@
-import Navbar from "../components/layout/Navbar";
+
 import Footer from "../components/layout/Footer";
 
 import whatsapp from "../assets/icons/whatsapp.svg";
@@ -12,12 +12,65 @@ import { motion } from "framer-motion";
 
 
 export default function Contact() {
+
+  const CONTACT_EMAIL =
+  "ssentababrian745@gmail.com";
+
+
+  const handleContactSubmit = (event) => {
+    event.preventDefault();
+
+    const formData =
+      new FormData(event.currentTarget);
+
+    const name =
+      formData.get("name")?.trim();
+
+    const email =
+      formData.get("email")?.trim();
+
+    const message =
+      formData.get("message")?.trim();
+
+
+    const subject =
+      `Portfolio Contact from ${name}`;
+
+
+    const body = `
+  Hello Brian,
+
+  You have received a new message through your portfolio.
+
+  Name: ${name}
+  Email: ${email}
+
+  Message:
+  ${message}
+
+  ---
+  Sent through rkbrian2k19 Portfolio
+    `.trim();
+
+
+    const gmailUrl =
+      "https://mail.google.com/mail/?view=cm&fs=1" +
+      `&to=${encodeURIComponent(CONTACT_EMAIL)}` +
+      `&su=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(body)}`;
+
+
+    window.open(
+      gmailUrl,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
   return (
     <div className="min-h-screen text-white relative isolate">
 
       <div className="relative z-10">
-
-        <Navbar />
 
         <section
           className="
@@ -277,7 +330,9 @@ export default function Contact() {
                         </h4>
 
                         <a
-                          href="mailto:ssentababrian745@gmail.com"
+                          href="https://mail.google.com/mail/?view=cm&fs=1&to=ssentababrian745@gmail.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="
                             block
                             text-gray-400
@@ -640,14 +695,18 @@ export default function Contact() {
                           md:text-lg
                         "
                       >
-                        Instagram
+                        rkbrian7
                       </span>
                     </a>
 
 
                     {/* Discord */}
 
-                    <div
+                    <a
+                      href="https://discord.gg/bf4uYBybgD"
+                      target="_blank"
+                      rel="noopener noreferrer"
+
                       className="
                         group
                         border
@@ -697,15 +756,17 @@ export default function Contact() {
                           md:text-lg
                         "
                       >
-                        Discord
+                        TBT Server
                       </span>
-                    </div>
+                    </a>
 
 
                     {/* Gmail */}
 
                     <a
-                      href="mailto:ssentababrian745@gmail.com"
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=ssentababrian745@gmail.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
 
                       className="
                         group
@@ -906,6 +967,7 @@ export default function Contact() {
               {/* Form */}
 
               <form
+                onSubmit={handleContactSubmit}
                 className="
                   p-5
                   sm:p-6
@@ -930,6 +992,8 @@ export default function Contact() {
 
                   <input
                     type="text"
+                    name="name"
+                    required
                     placeholder="Enter your name"
 
                     className="
@@ -962,6 +1026,8 @@ export default function Contact() {
 
                   <input
                     type="email"
+                    name="email"
+                    required
                     placeholder="Enter your email"
 
                     className="
@@ -993,6 +1059,8 @@ export default function Contact() {
                   </label>
 
                   <textarea
+                    name="message"
+                    required
                     rows="5"
                     placeholder="Type your message..."
 

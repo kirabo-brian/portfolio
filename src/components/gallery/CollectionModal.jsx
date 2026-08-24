@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -26,24 +27,44 @@ export default function CollectionModal({
     collection?.folder === "coding";
 
 
-  // =========================================================
-  // LOCK MAIN GALLERY PAGE
-  // =========================================================
+// =========================================================
+// LOCK MAIN GALLERY PAGE
+// =========================================================
+//
+// While a collection is open:
+//
+// Main Gallery page = locked
+// CollectionModal    = owns the scrollbar
+//
+// This prevents the browser page and collection
+// from producing two separate scrollbars.
+// =========================================================
 
-  useEffect(() => {
-    if (!collection) return;
+useEffect(() => {
+  if (!collection) return;
 
-    const previousOverflow =
-      document.body.style.overflow;
+  const previousBodyOverflow =
+    document.body.style.overflow;
 
+  const previousHtmlOverflow =
+    document.documentElement.style.overflow;
+
+
+  document.body.style.overflow =
+    "hidden";
+
+  document.documentElement.style.overflow =
+    "hidden";
+
+
+  return () => {
     document.body.style.overflow =
-      "hidden";
+      previousBodyOverflow;
 
-    return () => {
-      document.body.style.overflow =
-        previousOverflow;
-    };
-  }, [collection]);
+    document.documentElement.style.overflow =
+      previousHtmlOverflow;
+  };
+}, [collection]);
 
 
   // =========================================================
@@ -403,9 +424,13 @@ export default function CollectionModal({
             backdrop-blur-md
 
             ${
-              selectedCodingProject
+
+              selectedCodingProject ||
+              selectedItemIndex !== null
+
                 ? "overflow-hidden"
                 : "overflow-y-auto"
+
             }
 
             overflow-x-hidden
@@ -1175,44 +1200,43 @@ export default function CollectionModal({
 
               )}
 
+                </motion.div>
 
-              {/* =============================================
-                  NORMAL LIGHTBOX
-              ============================================= */}
+              </div>
 
-              {!isCodingCollection && (
+              {/* =================================================
+              NORMAL COLLECTION LIGHTBOX
+          ================================================= */}
 
-                <CollectionLightbox
-                  items={
-                    collection.items
-                  }
+          {!isCodingCollection && (
 
-                  selectedIndex={
-                    selectedItemIndex
-                  }
+            <CollectionLightbox
+              items={
+                collection.items
+              }
 
-                  setSelectedIndex={(
-                    index
-                  ) => {
+              selectedIndex={
+                selectedItemIndex
+              }
 
-                    if (
-                      index === null
-                    ) {
-                      closeItem();
-                      return;
-                    }
+              setSelectedIndex={(
+                index
+              ) => {
 
-                    changeItem(
-                      index
-                    );
-                  }}
-                />
+                if (
+                  index === null
+                ) {
+                  closeItem();
+                  return;
+                }
 
-              )}
+                changeItem(
+                  index
+                );
+              }}
+            />
 
-            </motion.div>
-
-          </div>
+          )}
 
 
           {/* =================================================

@@ -1,5 +1,15 @@
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  AnimatePresence,
+  motion,
+} from "framer-motion";
+
+import { createPortal } from "react-dom";
+
 
 export default function CollectionLightbox({
   items,
@@ -9,8 +19,17 @@ export default function CollectionLightbox({
   const [direction, setDirection] =
     useState(0);
 
+
+  // =========================================================
+  // OPEN STATE
+  // =========================================================
+
   const isOpen =
-    selectedIndex !== null;
+    selectedIndex !== null &&
+    selectedIndex >= 0 &&
+    selectedIndex <
+      (items?.length || 0);
+
 
   const currentItem =
     isOpen && items?.length > 0
@@ -23,13 +42,19 @@ export default function CollectionLightbox({
   // =========================================================
 
   const previousItem = () => {
-    if (!items?.length) return;
+    if (!items?.length) {
+      return;
+    }
 
     setDirection(-1);
 
+    const nextIndex =
+      selectedIndex === 0
+        ? items.length - 1
+        : selectedIndex - 1;
+
     setSelectedIndex(
-      (selectedIndex - 1 + items.length) %
-        items.length
+      nextIndex
     );
   };
 
@@ -39,13 +64,20 @@ export default function CollectionLightbox({
   // =========================================================
 
   const nextItem = () => {
-    if (!items?.length) return;
+    if (!items?.length) {
+      return;
+    }
 
     setDirection(1);
 
+    const nextIndex =
+      selectedIndex ===
+      items.length - 1
+        ? 0
+        : selectedIndex + 1;
+
     setSelectedIndex(
-      (selectedIndex + 1) %
-        items.length
+      nextIndex
     );
   };
 
@@ -58,7 +90,12 @@ export default function CollectionLightbox({
     event,
     info
   ) => {
-    if (items.length <= 1) return;
+    if (
+      !items?.length ||
+      items.length <= 1
+    ) {
+      return;
+    }
 
     const swipeDistance =
       info.offset.x;
@@ -67,15 +104,16 @@ export default function CollectionLightbox({
       info.velocity.x;
 
     const distanceThreshold = 70;
-
     const velocityThreshold = 500;
 
 
     // Swipe left → next
 
     if (
-      swipeDistance < -distanceThreshold ||
-      swipeVelocity < -velocityThreshold
+      swipeDistance <
+        -distanceThreshold ||
+      swipeVelocity <
+        -velocityThreshold
     ) {
       nextItem();
       return;
@@ -85,8 +123,10 @@ export default function CollectionLightbox({
     // Swipe right → previous
 
     if (
-      swipeDistance > distanceThreshold ||
-      swipeVelocity > velocityThreshold
+      swipeDistance >
+        distanceThreshold ||
+      swipeVelocity >
+        velocityThreshold
     ) {
       previousItem();
     }
@@ -94,57 +134,88 @@ export default function CollectionLightbox({
 
 
   // =========================================================
-  // KEYBOARD + SCROLL LOCK
+  // KEYBOARD
+  // =========================================================
+  //
+  // CollectionModal.jsx owns scroll locking.
+  //
+  // This component only handles:
+  //
+  // ESC
+  // LEFT
+  // RIGHT
+  //
   // =========================================================
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      return;
+    }
 
-    const handleKeyDown = (event) => {
 
-      if (event.key === "Escape") {
+    const handleKeyDown = (
+      event
+    ) => {
+
+      // ESC
+
+      if (
+        event.key === "Escape"
+      ) {
+        event.preventDefault();
+
         setSelectedIndex(null);
+
+        return;
       }
 
 
+      // LEFT
+
       if (
-        event.key === "ArrowLeft" &&
+        event.key ===
+          "ArrowLeft" &&
         items.length > 1
       ) {
+        event.preventDefault();
+
         setDirection(-1);
 
+        const nextIndex =
+          selectedIndex === 0
+            ? items.length - 1
+            : selectedIndex - 1;
+
         setSelectedIndex(
-          (currentIndex) =>
-            (
-              currentIndex -
-              1 +
-              items.length
-            ) %
-            items.length
+          nextIndex
         );
+
+        return;
       }
 
 
+      // RIGHT
+
       if (
-        event.key === "ArrowRight" &&
+        event.key ===
+          "ArrowRight" &&
         items.length > 1
       ) {
+        event.preventDefault();
+
         setDirection(1);
 
+        const nextIndex =
+          selectedIndex ===
+            items.length - 1
+            ? 0
+            : selectedIndex + 1;
+
         setSelectedIndex(
-          (currentIndex) =>
-            (
-              currentIndex +
-              1
-            ) %
-            items.length
+          nextIndex
         );
       }
     };
-
-
-    document.body.style.overflow =
-      "hidden";
 
 
     window.addEventListener(
@@ -154,19 +225,15 @@ export default function CollectionLightbox({
 
 
     return () => {
-
-      document.body.style.overflow =
-        "";
-
       window.removeEventListener(
         "keydown",
         handleKeyDown
       );
-
     };
 
   }, [
     isOpen,
+    selectedIndex,
     items,
     setSelectedIndex,
   ]);
@@ -215,120 +282,199 @@ export default function CollectionLightbox({
   };
 
 
-  return (
+  // =========================================================
+  // CLOSED
+  // =========================================================
+
+  if (
+    !isOpen ||
+    !currentItem
+  ) {
+    return null;
+  }
+
+
+  // =========================================================
+  // LIGHTBOX
+  // =========================================================
+
+  const lightbox = (
+
     <AnimatePresence>
 
-      {isOpen && currentItem && (
+      <motion.div
+        className="
+          fixed
+          inset-0
+
+          z-[80]
+
+          bg-black/95
+          backdrop-blur-md
+
+          flex
+          items-center
+          justify-center
+
+          px-4
+          md:px-6
+
+          pt-24
+          pb-4
+
+          overflow-hidden
+          overscroll-none
+        "
+
+        initial={{
+          opacity: 0,
+        }}
+
+        animate={{
+          opacity: 1,
+        }}
+
+        exit={{
+          opacity: 0,
+        }}
+
+        transition={{
+          duration: 0.2,
+        }}
+
+        onClick={() =>
+          setSelectedIndex(null)
+        }
+      >
 
         <motion.div
           className="
-            fixed
-            inset-0
-            z-[60]
+            relative
 
-            bg-black/95
-            backdrop-blur-md
+            w-full
+            h-full
+
+            max-w-6xl
 
             flex
+            flex-col
             items-center
-            justify-center
 
-            px-4
-            md:px-6
-
-            pt-24
-            pb-6
-
-            overflow-y-auto
+            min-h-0
           "
 
           initial={{
+            scale: 0.97,
             opacity: 0,
           }}
 
           animate={{
+            scale: 1,
             opacity: 1,
           }}
 
           exit={{
+            scale: 0.97,
             opacity: 0,
           }}
 
           transition={{
-            duration: 0.25,
+            duration: 0.2,
+            ease: "easeOut",
           }}
 
-          onClick={() =>
-            setSelectedIndex(null)
+          onClick={(event) =>
+            event.stopPropagation()
           }
         >
 
-          <motion.div
-            className="
-              relative
 
-              w-full
-              max-w-6xl
+          {/* =================================================
+              CLOSE
+          ================================================= */}
+
+          <button
+            type="button"
+
+            onClick={() =>
+              setSelectedIndex(null)
+            }
+
+            aria-label="Close media"
+
+            className="
+              absolute
+
+              top-3
+              right-3
+
+              md:top-4
+              md:right-4
+
+              z-30
+
+              w-11
+              h-11
+
+              md:w-12
+              md:h-12
+
+              rounded-full
+
+              bg-black/75
+
+              border
+              border-gray-700
 
               flex
-              flex-col
               items-center
+              justify-center
 
-              my-auto
+              text-white
+              text-2xl
+
+              hover:text-blue-400
+              hover:border-blue-500
+              hover:bg-blue-500/10
+
+              transition-all
             "
-
-            initial={{
-              scale: 0.95,
-              opacity: 0,
-              y: 20,
-            }}
-
-            animate={{
-              scale: 1,
-              opacity: 1,
-              y: 0,
-            }}
-
-            exit={{
-              scale: 0.95,
-              opacity: 0,
-              y: 15,
-            }}
-
-            transition={{
-              duration: 0.3,
-              ease: "easeOut",
-            }}
-
-            onClick={(event) =>
-              event.stopPropagation()
-            }
           >
+            ×
+          </button>
 
-            {/* =================================================
-                CLOSE
-            ================================================= */}
+
+          {/* =================================================
+              PREVIOUS
+          ================================================= */}
+
+          {items.length > 1 && (
 
             <button
-              onClick={() =>
-                setSelectedIndex(null)
+              type="button"
+
+              onClick={
+                previousItem
               }
 
-              aria-label="Close media"
+              aria-label="Previous item"
 
               className="
                 absolute
 
-                top-3
-                right-3
+                left-2
+                md:left-5
 
-                md:top-4
-                md:right-4
+                top-1/2
+                -translate-y-1/2
 
                 z-30
 
-                w-12
-                h-12
+                w-11
+                h-11
+
+                md:w-12
+                md:h-12
 
                 rounded-full
 
@@ -341,6 +487,7 @@ export default function CollectionLightbox({
                 items-center
                 justify-center
 
+                text-white
                 text-3xl
 
                 hover:text-blue-400
@@ -350,493 +497,432 @@ export default function CollectionLightbox({
                 transition-all
               "
             >
-              ×
+              ‹
             </button>
 
-
-            {/* =================================================
-                PREVIOUS
-            ================================================= */}
-
-            {items.length > 1 && (
-
-              <button
-                onClick={previousItem}
-
-                aria-label="Previous item"
-
-                className="
-                  absolute
-
-                  left-2
-                  md:left-5
-
-                  top-1/2
-                  -translate-y-1/2
-
-                  z-30
-
-                  w-11
-                  h-11
-
-                  md:w-12
-                  md:h-12
-
-                  rounded-full
-
-                  bg-black/75
-
-                  border
-                  border-gray-700
-
-                  flex
-                  items-center
-                  justify-center
-
-                  text-3xl
-                  md:text-4xl
-
-                  hover:text-blue-400
-                  hover:border-blue-500
-                  hover:bg-blue-500/10
-
-                  transition-all
-                "
-              >
-                ‹
-              </button>
-
-            )}
+          )}
 
 
-            {/* =================================================
-                NEXT
-            ================================================= */}
+          {/* =================================================
+              NEXT
+          ================================================= */}
 
-            {items.length > 1 && (
+          {items.length > 1 && (
 
-              <button
-                onClick={nextItem}
+            <button
+              type="button"
 
-                aria-label="Next item"
+              onClick={
+                nextItem
+              }
 
-                className="
-                  absolute
+              aria-label="Next item"
 
-                  right-2
-                  md:right-5
-
-                  top-1/2
-                  -translate-y-1/2
-
-                  z-30
-
-                  w-11
-                  h-11
-
-                  md:w-12
-                  md:h-12
-
-                  rounded-full
-
-                  bg-black/75
-
-                  border
-                  border-gray-700
-
-                  flex
-                  items-center
-                  justify-center
-
-                  text-3xl
-                  md:text-4xl
-
-                  hover:text-blue-400
-                  hover:border-blue-500
-                  hover:bg-blue-500/10
-
-                  transition-all
-                "
-              >
-                ›
-              </button>
-
-            )}
-
-
-            {/* =================================================
-                MEDIA
-            ================================================= */}
-
-            <div
               className="
-                relative
+                absolute
 
-                w-full
+                right-2
+                md:right-5
+
+                top-1/2
+                -translate-y-1/2
+
+                z-30
+
+                w-11
+                h-11
+
+                md:w-12
+                md:h-12
+
+                rounded-full
+
+                bg-black/75
+
+                border
+                border-gray-700
 
                 flex
                 items-center
                 justify-center
 
-                overflow-hidden
+                text-white
+                text-3xl
 
-                touch-pan-y
+                hover:text-blue-400
+                hover:border-blue-500
+                hover:bg-blue-500/10
+
+                transition-all
               "
             >
+              ›
+            </button>
 
-              <AnimatePresence
-                mode="wait"
-                custom={direction}
-              >
+          )}
 
-                {/* IMAGE */}
 
-                {currentItem.type ===
-                  "image" && (
+          {/* =================================================
+              MEDIA AREA
+          ================================================= */}
 
-                  <motion.img
-                    key={`image-${selectedIndex}`}
+          <div
+            className="
+              relative
 
-                    custom={direction}
+              w-full
 
-                    variants={
-                      mediaVariants
+              flex-1
+              min-h-0
+
+              flex
+              items-center
+              justify-center
+
+              overflow-hidden
+
+              touch-pan-y
+            "
+          >
+
+            <AnimatePresence
+              mode="wait"
+              custom={direction}
+            >
+
+
+              {/* IMAGE */}
+
+              {currentItem.type ===
+                "image" && (
+
+                <motion.img
+                  key={`image-${selectedIndex}`}
+
+                  custom={
+                    direction
+                  }
+
+                  variants={
+                    mediaVariants
+                  }
+
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+
+                  transition={{
+                    duration: 0.22,
+                    ease: "easeOut",
+                  }}
+
+                  drag={
+                    items.length > 1
+                      ? "x"
+                      : false
+                  }
+
+                  dragConstraints={{
+                    left: 0,
+                    right: 0,
+                  }}
+
+                  dragElastic={
+                    0.15
+                  }
+
+                  onDragEnd={
+                    handleSwipe
+                  }
+
+                  src={
+                    currentItem.src
+                  }
+
+                  alt={
+                    currentItem.title ||
+                    `Gallery item ${
+                      selectedIndex + 1
+                    }`
+                  }
+
+                  draggable="false"
+
+                  className="
+                    max-w-full
+                    max-h-full
+
+                    object-contain
+
+                    rounded-xl
+
+                    cursor-grab
+                    active:cursor-grabbing
+
+                    select-none
+                  "
+                />
+
+              )}
+
+
+              {/* VIDEO */}
+
+              {currentItem.type ===
+                "video" && (
+
+                <motion.div
+                  key={`video-${selectedIndex}`}
+
+                  custom={
+                    direction
+                  }
+
+                  variants={
+                    mediaVariants
+                  }
+
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+
+                  transition={{
+                    duration: 0.22,
+                    ease: "easeOut",
+                  }}
+
+                  className="
+                    w-full
+                    h-full
+
+                    flex
+                    items-center
+                    justify-center
+                  "
+                >
+
+                  <video
+                    src={
+                      currentItem.src
                     }
 
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-
-                    transition={{
-                      duration: 0.28,
-                      ease: "easeOut",
-                    }}
-
-                    drag={
-                      items.length > 1
-                        ? "x"
-                        : false
+                    poster={
+                      currentItem.poster
                     }
 
-                    dragConstraints={{
-                      left: 0,
-                      right: 0,
-                    }}
+                    controls
+                    autoPlay
+                    playsInline
 
-                    dragElastic={0.2}
+                    preload="metadata"
 
-                    onDragEnd={
-                      handleSwipe
-                    }
-
-                    src={currentItem.src}
-
-                    alt={
-                      currentItem.title ||
-                      `Gallery item ${
-                        selectedIndex + 1
-                      }`
+                    onClick={(event) =>
+                      event.stopPropagation()
                     }
 
                     className="
-                      w-full
-
-                      max-h-[65vh]
+                      max-w-full
+                      max-h-full
 
                       object-contain
 
                       rounded-xl
 
-                      cursor-grab
-                      active:cursor-grabbing
-
-                      select-none
+                      bg-black
                     "
                   />
 
-                )}
+                </motion.div>
+
+              )}
+
+            </AnimatePresence>
+
+          </div>
 
 
-                {/* VIDEO */}
+          {/* =================================================
+              CAPTION / INFORMATION
+          ================================================= */}
 
-                {currentItem.type ===
-                  "video" && (
+          <div
+            className="
+              flex-none
 
-                  <motion.div
-                    key={`video-${selectedIndex}`}
+              text-center
 
-                    custom={direction}
+              mt-3
 
-                    variants={
-                      mediaVariants
-                    }
+              px-4
+            "
+          >
 
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
+            {/* Media Type */}
 
-                    transition={{
-                      duration: 0.28,
-                      ease: "easeOut",
-                    }}
+            <p
+              className={`
+                uppercase
 
-                    className="
-                      w-full
+                tracking-[0.25em]
 
-                      flex
-                      items-center
-                      justify-center
-                    "
-                  >
+                text-[10px]
+                md:text-xs
 
-                    <video
-                      src={currentItem.src}
-
-                      poster={
-                        currentItem.poster
-                      }
-
-                      controls
-                      autoPlay
-                      playsInline
-                      preload="metadata"
-
-                      className="
-                        w-full
-
-                        max-h-[65vh]
-
-                        object-contain
-
-                        rounded-xl
-
-                        bg-black
-                      "
-                    />
-
-                  </motion.div>
-
-                )}
-
-              </AnimatePresence>
-
-            </div>
+                ${
+                  currentItem.youtubeUrl
+                    ? "text-red-400"
+                    : "text-blue-400"
+                }
+              `}
+            >
+              {currentItem.youtubeUrl
+                ? "YouTube Content"
+                : currentItem.type ===
+                    "video"
+                  ? "Video"
+                  : "Image"}
+            </p>
 
 
-            {/* =================================================
-                MOBILE SWIPE HINT
-            ================================================= */}
+            {/* Title */}
 
-            {items.length > 1 && (
+            {currentItem.title && (
 
-              <div
+              <h2
                 className="
-                  md:hidden
+                  text-xl
+                  sm:text-2xl
+                  md:text-3xl
 
-                  flex
-                  items-center
-                  justify-center
+                  font-bold
 
-                  gap-3
+                  text-white
 
-                  mt-4
-
-                  text-xs
-                  text-gray-500
+                  mt-1
                 "
               >
+                {
+                  currentItem.title
+                }
+              </h2>
 
-                <span>
-                  ←
-                </span>
+            )}
 
-                <span>
-                  Swipe to navigate
-                </span>
 
-                <span>
-                  →
-                </span>
+            {/* Description */}
 
-              </div>
+            {currentItem.description && (
+
+              <p
+                className="
+                  text-gray-400
+
+                  mt-2
+
+                  max-w-2xl
+                  mx-auto
+
+                  text-xs
+                  sm:text-sm
+                  md:text-base
+
+                  leading-relaxed
+                "
+              >
+                {
+                  currentItem.description
+                }
+              </p>
 
             )}
 
 
             {/* =================================================
-                CAPTION
+                WATCH ON YOUTUBE
             ================================================= */}
 
-            <div
-              className="
-                text-center
+            {currentItem.youtubeUrl && (
 
-                mt-4
-                md:mt-6
+              <motion.a
+                href={
+                  currentItem.youtubeUrl
+                }
 
-                px-4
-              "
-            >
+                target="_blank"
 
-              {/* Media Type */}
+                rel="noopener noreferrer"
 
-              <p
-                className={`
-                  uppercase
+                onClick={(event) =>
+                  event.stopPropagation()
+                }
 
-                  tracking-[0.25em]
+                whileHover={{
+                  y: -2,
+                }}
+
+                whileTap={{
+                  scale: 0.97,
+                }}
+
+                className="
+                  inline-flex
+                  items-center
+                  justify-center
+
+                  gap-2
+
+                  mt-3
+
+                  px-4
+                  py-2
+
+                  rounded-lg
+
+                  bg-red-600
+
+                  border
+                  border-red-500
+
+                  text-white
 
                   text-xs
+                  sm:text-sm
 
-                  ${
-                    currentItem.youtubeUrl
-                      ? "text-red-400"
-                      : "text-blue-400"
-                  }
-                `}
-              >
-                {currentItem.youtubeUrl
-                  ? "YouTube Content"
-                  : currentItem.type ===
-                      "video"
-                    ? "Video"
-                    : "Image"}
-              </p>
+                  font-semibold
 
+                  hover:bg-red-500
 
-              {/* Title */}
-
-              {currentItem.title && (
-
-                <h2
-                  className="
-                    text-2xl
-                    md:text-3xl
-
-                    font-bold
-
-                    mt-3
-                  "
-                >
-                  {currentItem.title}
-                </h2>
-
-              )}
-
-
-              {/* Description */}
-
-              {currentItem.description && (
-
-                <p
-                  className="
-                    text-gray-400
-
-                    mt-3
-
-                    max-w-2xl
-                    mx-auto
-
-                    text-sm
-                    md:text-base
-
-                    leading-relaxed
-                  "
-                >
-                  {currentItem.description}
-                </p>
-
-              )}
-
-
-              {/* =================================================
-                  WATCH ON YOUTUBE
-              ================================================= */}
-
-              {currentItem.youtubeUrl && (
-
-                <motion.a
-                  href={
-                    currentItem.youtubeUrl
-                  }
-
-                  target="_blank"
-
-                  rel="noopener noreferrer"
-
-                  whileHover={{
-                    y: -3,
-                    scale: 1.02,
-                  }}
-
-                  whileTap={{
-                    scale: 0.97,
-                  }}
-
-                  className="
-                    inline-flex
-                    items-center
-                    justify-center
-
-                    gap-2
-
-                    mt-5
-
-                    px-5
-                    py-3
-
-                    rounded-lg
-
-                    bg-red-600
-
-                    border
-                    border-red-500
-
-                    text-white
-
-                    text-sm
-                    md:text-base
-
-                    font-semibold
-
-                    hover:bg-red-500
-
-                    transition-colors
-                  "
-                >
-                  <span>
-                    ▶
-                  </span>
-
-                  Watch on YouTube
-
-                  <span>
-                    ↗
-                  </span>
-
-                </motion.a>
-
-              )}
-
-
-              {/* Counter */}
-
-              <p
-                className="
-                  text-blue-400
-
-                  mt-4
-
-                  font-medium
+                  transition-colors
                 "
               >
-                {selectedIndex + 1}
-                {" / "}
-                {items.length}
-              </p>
+                ▶ Watch on YouTube ↗
+              </motion.a>
+
+            )}
 
 
-              {/* Desktop Hint */}
+            {/* Counter */}
+
+            <p
+              className="
+                text-blue-400
+
+                mt-2
+
+                text-sm
+
+                font-medium
+              "
+            >
+              {selectedIndex + 1}
+              {" / "}
+              {items.length}
+            </p>
+
+
+            {/* Desktop Hint */}
+
+            {items.length > 1 && (
 
               <p
                 className="
@@ -845,22 +931,54 @@ export default function CollectionLightbox({
 
                   text-gray-500
 
-                  text-sm
+                  text-xs
 
-                  mt-2
+                  mt-1
                 "
               >
                 Use ← → to navigate · ESC to close
               </p>
 
-            </div>
+            )}
 
-          </motion.div>
+
+            {/* Mobile Hint */}
+
+            {items.length > 1 && (
+
+              <p
+                className="
+                  md:hidden
+
+                  text-gray-500
+
+                  text-[10px]
+
+                  mt-1
+                "
+              >
+                Swipe to navigate
+              </p>
+
+            )}
+
+          </div>
 
         </motion.div>
 
-      )}
+      </motion.div>
 
     </AnimatePresence>
+
+  );
+
+
+  // =========================================================
+  // PORTAL
+  // =========================================================
+
+  return createPortal(
+    lightbox,
+    document.body
   );
 }
