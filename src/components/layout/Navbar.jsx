@@ -159,6 +159,7 @@ export default function Navbar() {
             flex
             items-center
             justify-center
+            text-white
             hover:border-blue-500
             hover:text-blue-400
             transition
