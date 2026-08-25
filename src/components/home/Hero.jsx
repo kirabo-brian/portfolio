@@ -3,23 +3,37 @@ import { Link } from "react-router-dom";
 
 import profile from "../../assets/profile.jpg";
 
+
 export default function Hero() {
   return (
     <section
       className="
         relative
         min-h-[90vh]
+
         max-w-7xl
         mx-auto
-        px-6
+
+        px-4
+        sm:px-6
         md:px-10
-        pt-32
-        pb-20
+
+        pt-28
+        sm:pt-32
+
+        pb-16
+        md:pb-20
+
         grid
         lg:grid-cols-[0.9fr_1.1fr]
-        gap-14
+
+        gap-10
+        sm:gap-12
         lg:gap-20
+
         items-center
+
+        overflow-x-hidden
       "
     >
 
@@ -30,24 +44,30 @@ export default function Hero() {
       <motion.div
         initial={{
           opacity: 0,
-          x: -50,
+          x: -40,
           scale: 0.95,
         }}
+
         animate={{
           opacity: 1,
           x: 0,
           scale: 1,
         }}
+
         transition={{
           duration: 0.8,
           ease: "easeOut",
         }}
+
         className="
           relative
-          max-w-md
+
+          w-full
+          max-w-sm
+          sm:max-w-md
+
           mx-auto
           lg:mx-0
-          w-full
         "
       >
 
@@ -58,16 +78,23 @@ export default function Hero() {
             rotate: [3, 5, 3],
             y: [0, -6, 0],
           }}
+
           transition={{
             duration: 5,
             repeat: Infinity,
             ease: "easeInOut",
           }}
+
           className="
             absolute
-            -inset-4
+
+            -inset-2
+            sm:-inset-4
+
             bg-blue-500
+
             rotate-3
+
             rounded-sm
           "
         />
@@ -78,10 +105,17 @@ export default function Hero() {
         <div
           className="
             absolute
-            -inset-10
+
+            -inset-5
+            sm:-inset-10
+
             bg-blue-500/20
+
             blur-3xl
+
             rounded-full
+
+            pointer-events-none
           "
         />
 
@@ -90,21 +124,29 @@ export default function Hero() {
 
         <motion.img
           src={profile}
+
           alt="Brian"
+
           whileHover={{
             y: -8,
             rotate: -1,
           }}
+
           transition={{
             duration: 0.3,
           }}
+
           className="
             relative
             z-10
+
             w-full
+
             border-4
             border-white
+
             shadow-2xl
+
             object-cover
           "
         />
@@ -117,30 +159,52 @@ export default function Hero() {
             opacity: 0,
             y: 20,
           }}
+
           animate={{
             opacity: 1,
             y: 0,
           }}
+
           transition={{
             delay: 0.8,
             duration: 0.5,
           }}
+
           className="
             absolute
-            -bottom-5
-            right-4
+
+            -bottom-4
+            sm:-bottom-5
+
+            right-2
+            sm:right-4
             md:-right-6
+
             z-20
-            px-5
-            py-3
+
+            px-3
+            sm:px-5
+
+            py-2
+            sm:py-3
+
             bg-black/80
+
             backdrop-blur-md
+
             border
             border-blue-500
+
             text-blue-300
-            text-sm
+
+            text-[10px]
+            sm:text-sm
+
             font-semibold
+
             tracking-wide
+
+            whitespace-nowrap
           "
         >
           DESIGN • CODE • CREATE
@@ -156,17 +220,23 @@ export default function Hero() {
       <motion.div
         initial={{
           opacity: 0,
-          x: 50,
+          x: 40,
         }}
+
         animate={{
           opacity: 1,
           x: 0,
         }}
+
         transition={{
           duration: 0.8,
           delay: 0.15,
           ease: "easeOut",
         }}
+
+        className="
+          min-w-0
+        "
       >
 
         {/* Eyebrow */}
@@ -176,21 +246,32 @@ export default function Hero() {
             opacity: 0,
             y: 15,
           }}
+
           animate={{
             opacity: 1,
             y: 0,
           }}
+
           transition={{
             delay: 0.4,
             duration: 0.5,
           }}
+
           className="
             text-blue-400
+
             uppercase
-            tracking-[0.35em]
-            text-sm
+
+            tracking-[0.25em]
+            sm:tracking-[0.35em]
+
+            text-xs
+            sm:text-sm
+
             font-semibold
-            mb-5
+
+            mb-4
+            sm:mb-5
           "
         >
           Creative Developer
@@ -204,32 +285,60 @@ export default function Hero() {
             opacity: 0,
             y: 30,
           }}
+
           animate={{
             opacity: 1,
             y: 0,
           }}
+
           transition={{
             delay: 0.5,
             duration: 0.7,
             ease: "easeOut",
           }}
+
           className="
-            text-7xl
+            text-[3.4rem]
+            xs:text-6xl
             sm:text-8xl
             md:text-[8.5rem]
+
             font-black
+
             uppercase
+
             leading-[0.82]
+
             tracking-tight
+
+            max-w-full
           "
         >
-          <span className="block text-white">
+
+          <span
+            className="
+              block
+              text-white
+            "
+          >
             PORT
           </span>
 
-          <span className="block ml-8 md:ml-14 text-blue-400">
+
+          <span
+            className="
+              block
+
+              ml-4
+              sm:ml-8
+              md:ml-14
+
+              text-blue-400
+            "
+          >
             FOLIO
           </span>
+
         </motion.h1>
 
 
@@ -240,19 +349,27 @@ export default function Hero() {
             opacity: 0,
             y: 20,
           }}
+
           animate={{
             opacity: 1,
             y: 0,
           }}
+
           transition={{
             delay: 0.65,
             duration: 0.5,
           }}
+
           className="
-            text-2xl
+            text-xl
+            sm:text-2xl
             md:text-3xl
-            mt-8
+
+            mt-7
+            sm:mt-8
+
             text-white
+
             font-semibold
           "
         >
@@ -267,26 +384,43 @@ export default function Hero() {
             opacity: 0,
             y: 15,
           }}
+
           animate={{
             opacity: 1,
             y: 0,
           }}
+
           transition={{
             delay: 0.75,
             duration: 0.5,
           }}
+
           className="
             inline-block
+
+            max-w-full
+
             mt-5
-            px-4
+
+            px-3
+            sm:px-4
+
             py-2
+
             bg-blue-500/15
+
             border
             border-blue-500
+
             rounded-full
+
             text-blue-300
-            text-sm
+
+            text-xs
+            sm:text-sm
             md:text-base
+
+            leading-relaxed
           "
         >
           Creative Designer • Video Editor • Learning Game Development
@@ -300,19 +434,27 @@ export default function Hero() {
             opacity: 0,
             y: 15,
           }}
+
           animate={{
             opacity: 1,
             y: 0,
           }}
+
           transition={{
             delay: 0.85,
             duration: 0.5,
           }}
+
           className="
             text-gray-300
+
             mt-6
+
             max-w-xl
-            text-lg
+
+            text-base
+            sm:text-lg
+
             leading-relaxed
           "
         >
@@ -330,36 +472,60 @@ export default function Hero() {
             opacity: 0,
             y: 20,
           }}
+
           animate={{
             opacity: 1,
             y: 0,
           }}
+
           transition={{
             delay: 0.95,
             duration: 0.5,
           }}
+
           className="
             flex
-            flex-wrap
-            gap-4
-            mt-9
+            flex-col
+            sm:flex-row
+            sm:flex-wrap
+
+            gap-3
+            sm:gap-4
+
+            mt-8
+            sm:mt-9
           "
         >
 
           <Link
             to="/gallery"
+
             className="
-              px-8
-              py-4
+              w-full
+              sm:w-auto
+
+              text-center
+
+              px-6
+              sm:px-8
+
+              py-3
+              sm:py-4
+
               border-2
               border-white
+
               font-bold
+
               bg-white
               text-black
+
               hover:bg-blue-500
               hover:border-blue-500
               hover:text-white
+
               hover:-translate-y-1
+
               transition-all
               duration-300
             "
@@ -370,16 +536,31 @@ export default function Hero() {
 
           <Link
             to="/contact"
+
             className="
-              px-8
-              py-4
+              w-full
+              sm:w-auto
+
+              text-center
+
+              px-6
+              sm:px-8
+
+              py-3
+              sm:py-4
+
               border-2
               border-blue-500
+
               text-blue-400
+
               font-bold
+
               hover:bg-blue-500
               hover:text-white
+
               hover:-translate-y-1
+
               transition-all
               duration-300
             "
@@ -396,20 +577,33 @@ export default function Hero() {
           initial={{
             opacity: 0,
           }}
+
           animate={{
             opacity: 1,
           }}
+
           transition={{
             delay: 1.15,
             duration: 0.6,
           }}
+
           className="
             flex
-            items-center
+
+            items-start
+            sm:items-center
+
             gap-3
-            mt-8
-            text-sm
+
+            mt-7
+            sm:mt-8
+
+            text-xs
+            sm:text-sm
+
             text-gray-500
+
+            max-w-full
           "
         >
 
@@ -417,13 +611,23 @@ export default function Hero() {
             className="
               w-2
               h-2
+
+              mt-1
+              sm:mt-0
+
               rounded-full
+
               bg-blue-400
+
               animate-pulse
+
+              flex-shrink-0
             "
           />
 
-          Exploring design, development and interactive media
+          <span>
+            Exploring design, development and interactive media
+          </span>
 
         </motion.div>
 
@@ -438,26 +642,38 @@ export default function Hero() {
         initial={{
           opacity: 0,
         }}
+
         animate={{
           opacity: 1,
         }}
+
         transition={{
           delay: 1.4,
           duration: 0.6,
         }}
+
         className="
           hidden
           lg:flex
+
           absolute
+
           bottom-8
           left-1/2
           -translate-x-1/2
+
           flex-col
+
           items-center
+
           gap-2
+
           text-gray-500
+
           text-xs
+
           uppercase
+
           tracking-[0.25em]
         "
       >
@@ -466,16 +682,22 @@ export default function Hero() {
           Scroll
         </span>
 
+
         <motion.span
           animate={{
             y: [0, 7, 0],
           }}
+
           transition={{
             duration: 1.6,
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="text-blue-400 text-xl"
+
+          className="
+            text-blue-400
+            text-xl
+          "
         >
           ↓
         </motion.span>
