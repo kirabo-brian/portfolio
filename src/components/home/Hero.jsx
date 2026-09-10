@@ -18,7 +18,7 @@ export default function Hero() {
         sm:px-6
         md:px-10
 
-        pt-28
+        pt-32
         sm:pt-32
 
         pb-16
@@ -34,6 +34,7 @@ export default function Hero() {
         items-center
 
         overflow-x-hidden
+        lg:overflow-visible
       "
     >
 
@@ -62,8 +63,10 @@ export default function Hero() {
         className="
           relative
 
-          w-full
-          max-w-sm
+          w-[calc(100%_-_3rem)]
+          sm:w-[calc(100%_-_2rem)]
+          lg:w-full
+          max-w-[min(18rem,36svh)]
           sm:max-w-md
 
           mx-auto
