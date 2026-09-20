@@ -1,10 +1,29 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import profile from "../../assets/profile.jpg";
+import profile01 from "../../assets/profile.01.jpg";
+import profile02 from "../../assets/profile.02.jpg";
+import profile03 from "../../assets/profile.03.jpg";
+
+const heroImages = [
+  { src: profile01, alt: "Kirabo Brian Ssentaba" },
+  { src: profile02, alt: "Kirabo Brian Ssentaba" },
+  { src: profile03, alt: "Kirabo Brian Ssentaba" },
+];
 
 
 export default function Hero() {
+  const [activeImage, setActiveImage] = useState(0);
+
+  useEffect(() => {
+    const imageTimer = window.setInterval(() => {
+      setActiveImage((current) => (current + 1) % heroImages.length);
+    }, 4500);
+
+    return () => window.clearInterval(imageTimer);
+  }, []);
+
   return (
     <section
       className="
@@ -120,36 +139,42 @@ export default function Hero() {
         />
 
 
-        {/* Profile Image */}
+        {/* Profile image slideshow */}
 
-        <motion.img
-          src={profile}
+        <div className="relative z-10 aspect-[4/5] overflow-hidden border-4 border-white shadow-2xl">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={heroImages[activeImage].src}
+              src={heroImages[activeImage].src}
+              alt={heroImages[activeImage].alt}
+              initial={{ opacity: 0, scale: 1.06 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.65, ease: "easeInOut" }}
+              whileHover={{ scale: 1.03 }}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </AnimatePresence>
+        </div>
 
-          alt="Brian"
-
-          whileHover={{
-            y: -8,
-            rotate: -1,
-          }}
-
-          transition={{
-            duration: 0.3,
-          }}
-
-          className="
-            relative
-            z-10
-
-            w-full
-
-            border-4
-            border-white
-
-            shadow-2xl
-
-            object-cover
-          "
-        />
+        <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 gap-1">
+          {heroImages.map((image, index) => (
+            <button
+              key={image.src}
+              type="button"
+              aria-label={`Show profile image ${index + 1}`}
+              aria-current={index === activeImage ? "true" : undefined}
+              onClick={() => setActiveImage(index)}
+              className="grid min-h-8 min-w-8 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              <span
+                className={`h-2 rounded-full transition-all ${
+                  index === activeImage ? "w-6 bg-white" : "w-2 bg-white/55 hover:bg-white"
+                }`}
+              />
+            </button>
+          ))}
+        </div>
 
 
         {/* Floating Label */}
