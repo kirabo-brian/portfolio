@@ -1,67 +1,12 @@
-import { useEffect, useRef } from "react";
+import PreviewVideo from "../media/PreviewVideo";
 
 export default function Background() {
-  const videoRef = useRef(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-
-    if (!video) return;
-
-    const ensureVideoPlaying = () => {
-      if (
-        document.visibilityState === "visible" &&
-        video.paused
-      ) {
-        video.play().catch(() => {});
-      }
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        ensureVideoPlaying();
-      }
-    };
-
-    const handleWindowFocus = () => {
-      ensureVideoPlaying();
-    };
-
-    ensureVideoPlaying();
-
-    document.addEventListener(
-      "visibilitychange",
-      handleVisibilityChange
-    );
-
-    window.addEventListener(
-      "focus",
-      handleWindowFocus
-    );
-
-    return () => {
-      document.removeEventListener(
-        "visibilitychange",
-        handleVisibilityChange
-      );
-
-      window.removeEventListener(
-        "focus",
-        handleWindowFocus
-      );
-    };
-  }, []);
-
   return (
-    <div className="fixed inset-0 overflow-hidden">
+    <div aria-hidden="true" className="fixed inset-0 overflow-hidden bg-slate-950">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,#172554,transparent_65%)]" />
 
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
+      <PreviewVideo
+        src="/videos/background_2.mp4"
         className="
           absolute
           inset-0
@@ -69,12 +14,7 @@ export default function Background() {
           h-full
           object-cover
         "
-      >
-        <source
-          src="/videos/background_2.mp4"
-          type="video/mp4"
-        />
-      </video>
+      />
 
       {/* Lighter overlay so the background remains visible */}
       <div

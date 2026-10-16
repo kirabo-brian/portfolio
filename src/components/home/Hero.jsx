@@ -96,7 +96,7 @@ export default function Hero() {
         {/* Blue Accent Layer */}
 
         <motion.div
-          animate={{
+          animate={reduceMotion ? { rotate: 3, y: 0 } : {
             rotate: [3, 5, 3],
             y: [0, -6, 0],
           }}
@@ -194,7 +194,7 @@ export default function Hero() {
           }}
 
           transition={{
-            delay: 0.8,
+            delay: 0.2,
             duration: 0.5,
           }}
 
@@ -281,7 +281,7 @@ export default function Hero() {
           }}
 
           transition={{
-            delay: 0.4,
+            delay: 0.05,
             duration: 0.5,
           }}
 
@@ -320,16 +320,14 @@ export default function Hero() {
           }}
 
           transition={{
-            delay: 0.5,
+            delay: 0.1,
             duration: 0.7,
             ease: "easeOut",
           }}
 
           className="
-            text-[3.4rem]
-            xs:text-6xl
-            sm:text-8xl
-            md:text-[8.5rem]
+            text-[clamp(3.4rem,12vw,8.5rem)]
+            lg:text-[clamp(3.4rem,9vw,8.5rem)]
 
             font-black
 
@@ -384,7 +382,7 @@ export default function Hero() {
           }}
 
           transition={{
-            delay: 0.65,
+            delay: 0.15,
             duration: 0.5,
           }}
 
@@ -419,7 +417,7 @@ export default function Hero() {
           }}
 
           transition={{
-            delay: 0.75,
+            delay: 0.2,
             duration: 0.5,
           }}
 
@@ -469,7 +467,7 @@ export default function Hero() {
           }}
 
           transition={{
-            delay: 0.85,
+            delay: 0.2,
             duration: 0.5,
           }}
 
@@ -507,7 +505,7 @@ export default function Hero() {
           }}
 
           transition={{
-            delay: 0.95,
+            delay: 0.25,
             duration: 0.5,
           }}
 
@@ -611,7 +609,7 @@ export default function Hero() {
           }}
 
           transition={{
-            delay: 1.15,
+            delay: 0.3,
             duration: 0.6,
           }}
 
@@ -676,7 +674,7 @@ export default function Hero() {
         }}
 
         transition={{
-          delay: 1.4,
+          delay: 0.4,
           duration: 0.6,
         }}
 
@@ -712,7 +710,7 @@ export default function Hero() {
 
 
         <motion.span
-          animate={{
+          animate={reduceMotion ? { y: 0 } : {
             y: [0, 7, 0],
           }}
 

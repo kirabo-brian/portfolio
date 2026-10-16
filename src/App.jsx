@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -8,6 +9,7 @@ import {
 import {
   AnimatePresence,
   motion,
+  MotionConfig,
 } from "framer-motion";
 
 import Background from "./components/layout/Background";
@@ -15,15 +17,15 @@ import Navbar from "./components/layout/Navbar";
 import ScrollToTop from "./components/layout/ScrollToTop";
 
 import Home from "./pages/Home";
-import Gallery from "./pages/Gallery";
-import Contact from "./pages/Contact";
+const Gallery = lazy(() => import("./pages/Gallery"));
+const Contact = lazy(() => import("./pages/Contact"));
 
 
 function AnimatedRoutes() {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" initial={false}>
       <Routes
         location={location}
         key={location.pathname}
@@ -51,7 +53,7 @@ function AnimatedRoutes() {
               }}
 
               transition={{
-                duration: 0.35,
+                duration: 0.18,
                 ease: "easeOut",
               }}
             >
@@ -83,7 +85,7 @@ function AnimatedRoutes() {
               }}
 
               transition={{
-                duration: 0.35,
+                duration: 0.18,
                 ease: "easeOut",
               }}
             >
@@ -115,7 +117,7 @@ function AnimatedRoutes() {
               }}
 
               transition={{
-                duration: 0.3,
+                duration: 0.18,
                 ease: "easeOut",
               }}
             >
@@ -132,6 +134,7 @@ function AnimatedRoutes() {
 
 function App() {
   return (
+    <MotionConfig reducedMotion="user">
     <BrowserRouter>
 
       <ScrollToTop />
@@ -175,12 +178,15 @@ function App() {
             z-10
           "
         >
-          <AnimatedRoutes />
+          <Suspense fallback={<div role="status" className="min-h-screen px-6 pt-32 text-gray-300">Loading page…</div>}>
+            <AnimatedRoutes />
+          </Suspense>
         </div>
 
       </div>
 
     </BrowserRouter>
+    </MotionConfig>
   );
 }
 

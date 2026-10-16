@@ -1,2 +1,24 @@
 
 @import "tailwindcss";
+
+html {
+  background: #020617;
+  scrollbar-gutter: stable;
+}
+
+@media (max-width: 767px) {
+  /* Opaque panels need less backdrop compositing while scrolling on phones. */
+  [class*="backdrop-blur"] {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

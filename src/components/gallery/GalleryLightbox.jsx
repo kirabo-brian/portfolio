@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function GalleryLightbox({
@@ -8,6 +8,11 @@ export default function GalleryLightbox({
   onOpenCollection,
 }) {
   const [direction, setDirection] = useState(0);
+  // URL navigation can render asynchronously; keep rapid keypresses sequential.
+  const navigationIndex = useRef(selectedIndex);
+  useEffect(() => {
+    navigationIndex.current = selectedIndex;
+  }, [selectedIndex]);
 
   const isOpen =
     selectedIndex !== null;
@@ -110,17 +115,10 @@ export default function GalleryLightbox({
         event.key === "ArrowLeft" &&
         images.length > 1
       ) {
+        event.preventDefault();
         setDirection(-1);
-
-        setSelectedIndex(
-          (currentIndex) =>
-            (
-              currentIndex -
-              1 +
-              images.length
-            ) %
-            images.length
-        );
+        navigationIndex.current = (navigationIndex.current - 1 + images.length) % images.length;
+        setSelectedIndex(navigationIndex.current);
       }
 
 
@@ -128,16 +126,10 @@ export default function GalleryLightbox({
         event.key === "ArrowRight" &&
         images.length > 1
       ) {
+        event.preventDefault();
         setDirection(1);
-
-        setSelectedIndex(
-          (currentIndex) =>
-            (
-              currentIndex +
-              1
-            ) %
-            images.length
-        );
+        navigationIndex.current = (navigationIndex.current + 1) % images.length;
+        setSelectedIndex(navigationIndex.current);
       }
     };
 
@@ -164,6 +156,7 @@ export default function GalleryLightbox({
 
   }, [
     isOpen,
+    selectedIndex,
     images,
     setSelectedIndex,
   ]);

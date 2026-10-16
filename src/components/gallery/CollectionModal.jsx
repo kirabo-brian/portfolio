@@ -9,6 +9,9 @@ import CodingProjectModal from "./CodingProjectModal";
 import CodingScreenshotLightbox from "./CodingScreenshotLightbox";
 
 import { codingProjects } from "../../data/codingProjects";
+import ResponsiveImage from "../media/ResponsiveImage";
+import PreviewVideo from "../media/PreviewVideo";
+import { previewProps, previewUrl } from "../../data/responsiveImages";
 
 
 export default function CollectionModal({
@@ -556,29 +559,10 @@ useEffect(() => {
 
                 {collection.coverVideo ? (
 
-                  <motion.video
+                  <PreviewVideo
                     src={collection.coverVideo}
 
-                    poster={collection.cover}
-
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-
-                    preload="metadata"
-
-                    initial={{
-                      scale: 1.06,
-                    }}
-
-                    animate={{
-                      scale: 1,
-                    }}
-
-                    transition={{
-                      duration: 0.7,
-                    }}
+                    poster={previewUrl(collection.cover)}
 
                     className="
                       w-full
@@ -598,7 +582,9 @@ useEffect(() => {
                 ) : collection.cover ? (
 
                   <motion.img
-                    src={collection.cover}
+                    {...previewProps(collection.cover)}
+                    sizes="(min-width: 1024px) 960px, 100vw"
+                    decoding="async"
                     alt={collection.title}
 
                     initial={{
@@ -1045,7 +1031,7 @@ useEffect(() => {
                           {item.type ===
                             "image" && (
 
-                            <img
+                            <ResponsiveImage
                           src={item.src}
                           alt={
                             item.title ||
@@ -1073,14 +1059,9 @@ useEffect(() => {
                           {item.type ===
                             "video" && (
 
-                            <video
+                            <PreviewVideo
                               src={item.src}
-                              poster={item.poster}
-
-                              muted
-                              loop
-                              autoPlay
-                              playsInline
+                              poster={previewUrl(item.poster)}
 
                               className="
                                 w-full

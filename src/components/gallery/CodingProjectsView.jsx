@@ -1,6 +1,7 @@
 
 import { motion } from "framer-motion";
 import { codingProjects } from "../../data/codingProjects";
+import ResponsiveImage from "../media/ResponsiveImage";
 
 export default function CodingProjectsView({
   onOpenProject,
@@ -113,7 +114,7 @@ export default function CodingProjectsView({
               "
             >
               {project.cover ? (
-                <img
+                <ResponsiveImage
                   src={project.cover}
                   alt={project.title}
                   className="

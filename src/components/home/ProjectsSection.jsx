@@ -274,7 +274,8 @@ export default function ProjectsSection() {
       <div
         className="
           grid
-          grid-cols-2
+          grid-cols-1
+          sm:grid-cols-2
           md:grid-cols-2
 
           gap-4
