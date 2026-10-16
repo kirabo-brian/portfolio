@@ -1,5 +1,6 @@
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import ResponsiveImage from "../media/ResponsiveImage";
 
 export default function CodingProjectModal({
   project,
@@ -7,12 +8,11 @@ export default function CodingProjectModal({
   onOpenScreenshot,
   screenshotOpen = false,
 }) {
-  if (!project) return null;
-
-  const hasCover = Boolean(project.cover);
+  const hasCover = Boolean(project?.cover);
 
   const modal = (
     <AnimatePresence>
+      {project && (
       <motion.div
         className={`
           fixed
@@ -127,7 +127,8 @@ export default function CodingProjectModal({
               `}
             >
               {hasCover ? (
-                <img
+                <ResponsiveImage
+                  sizes="(min-width: 1024px) 960px, 100vw"
                   src={project.cover}
                   alt={project.title}
                   className="
@@ -886,7 +887,7 @@ export default function CodingProjectModal({
                             transition-colors
                           "
                         >
-                          <img
+                          <ResponsiveImage
                             src={screenshot.src}
                             alt={screenshot.title}
                             className="
@@ -999,6 +1000,7 @@ export default function CodingProjectModal({
           </motion.div>
         </div>
       </motion.div>
+      )}
     </AnimatePresence>
   );
 

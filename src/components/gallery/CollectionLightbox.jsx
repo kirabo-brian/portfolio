@@ -286,12 +286,6 @@ export default function CollectionLightbox({
   // CLOSED
   // =========================================================
 
-  if (
-    !isOpen ||
-    !currentItem
-  ) {
-    return null;
-  }
 
 
   // =========================================================
@@ -301,7 +295,7 @@ export default function CollectionLightbox({
   const lightbox = (
 
     <AnimatePresence>
-
+      {isOpen && currentItem && (
       <motion.div
         className="
           fixed
@@ -967,7 +961,7 @@ export default function CollectionLightbox({
         </motion.div>
 
       </motion.div>
-
+      )}
     </AnimatePresence>
 
   );

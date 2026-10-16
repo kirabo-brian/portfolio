@@ -3,6 +3,9 @@ import { useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
 import Footer from "../components/layout/Footer";
+import ResponsiveImage from "../components/media/ResponsiveImage";
+import PreviewVideo from "../components/media/PreviewVideo";
+import { previewUrl } from "../data/responsiveImages";
 
 import GalleryLightbox from "../components/gallery/GalleryLightbox";
 import CollectionModal from "../components/gallery/CollectionModal";
@@ -732,7 +735,7 @@ export default function Gallery() {
                     overflow-hidden
                   "
                 >
-                  <img
+                  <ResponsiveImage
                     src={
                       project.image
                     }
@@ -1357,19 +1360,12 @@ export default function Gallery() {
 
                     {collection.coverVideo ? (
 
-                      <video
+                      <PreviewVideo
                         src={collection.coverVideo}
 
                         poster={
-                          collection.cover
+                          previewUrl(collection.cover)
                         }
-
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-
-                        preload="metadata"
 
                         aria-label={
                           `${collection.title} animated cover`
@@ -1396,7 +1392,8 @@ export default function Gallery() {
                         NORMAL IMAGE COVER
                       ============================================= */
 
-                      <img
+                      <ResponsiveImage
+                        sizes="(min-width: 1024px) 400px, 50vw"
                         src={
                           collection.cover
                         }

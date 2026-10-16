@@ -68,12 +68,12 @@ export default function CodingScreenshotLightbox({
 
       if (event.key === "ArrowLeft") {
         event.preventDefault();
-        previousScreenshot();
+        setSelectedIndex((selectedIndex - 1 + screenshots.length) % screenshots.length);
       }
 
       if (event.key === "ArrowRight") {
         event.preventDefault();
-        nextScreenshot();
+        setSelectedIndex((selectedIndex + 1) % screenshots.length);
       }
     };
 
@@ -92,6 +92,7 @@ export default function CodingScreenshotLightbox({
     isOpen,
     selectedIndex,
     screenshots.length,
+    setSelectedIndex,
   ]);
 
 
@@ -176,9 +177,6 @@ export default function CodingScreenshotLightbox({
   // NOTHING TO RENDER
   // =========================================================
 
-  if (!isOpen || !currentScreenshot) {
-    return null;
-  }
 
 
   // =========================================================
@@ -187,6 +185,7 @@ export default function CodingScreenshotLightbox({
 
   const lightbox = (
     <AnimatePresence>
+      {isOpen && currentScreenshot && (
       <motion.div
         className="
           fixed
@@ -637,6 +636,7 @@ export default function CodingScreenshotLightbox({
         </div>
 
       </motion.div>
+      )}
     </AnimatePresence>
   );
 
