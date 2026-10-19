@@ -1,5 +1,7 @@
 
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
+import useDialogFocus from "../../hooks/useDialogFocus";
 import { useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -18,6 +20,7 @@ export default function CollectionModal({
   collection,
   onClose,
 }) {
+  const dialogRef = useDialogFocus(Boolean(collection), onClose, 240);
   const [searchParams, setSearchParams] =
     useSearchParams();
 
@@ -412,16 +415,20 @@ useEffect(() => {
   // RENDER
   // =========================================================
 
-  return (
+  return createPortal((
     <AnimatePresence>
 
       {collection && (
 
         <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-label={collection.title}
+          tabIndex={-1}
           className={`
             fixed
             inset-0
-            z-40
+            z-[240]
 
             bg-black/90
             backdrop-blur-md
@@ -993,6 +1000,16 @@ useEffect(() => {
 
                         <motion.div
                           key={`${item.src}-${index}`}
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`Open ${item.title || "artwork"}`}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              openItem(index);
+                            }
+                          }}
 
                           whileHover={{
                             y: -5,
@@ -1278,5 +1295,5 @@ useEffect(() => {
       )}
 
     </AnimatePresence>
-  );
+  ), document.body);
 }

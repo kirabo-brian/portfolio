@@ -72,7 +72,7 @@ export default function Navbar() {
             ✦
           </span>
 
-          <h1
+          <span
             className="
               text-lg
               sm:text-xl
@@ -84,7 +84,7 @@ export default function Navbar() {
             "
           >
             rkbrian2k19
-          </h1>
+          </span>
         </Link>
 
 

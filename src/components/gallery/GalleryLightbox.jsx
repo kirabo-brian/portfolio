@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { createPortal } from "react-dom";
+import useDialogFocus from "../../hooks/useDialogFocus";
 
 export default function GalleryLightbox({
   images,
@@ -21,6 +23,7 @@ export default function GalleryLightbox({
     isOpen && images?.length > 0
       ? images[selectedIndex]
       : null;
+  const dialogRef = useDialogFocus(Boolean(isOpen && currentProject), () => setSelectedIndex(null), 250);
 
 
   // =========================================================
@@ -205,16 +208,20 @@ export default function GalleryLightbox({
   };
 
 
-  return (
+  return createPortal((
     <AnimatePresence>
 
       {isOpen && currentProject && (
 
         <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-label="Featured project"
+          tabIndex={-1}
           className="
             fixed
             inset-0
-            z-[60]
+            z-[250]
 
             bg-black/95
             backdrop-blur-md
@@ -916,5 +923,5 @@ export default function GalleryLightbox({
       )}
 
     </AnimatePresence>
-  );
+  ), document.body);
 }

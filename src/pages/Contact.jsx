@@ -190,7 +190,7 @@ export default function Contact() {
                   md:p-6
                 "
               >
-                <h3
+                <h2
                   className="
                     text-blue-400
                     text-sm
@@ -201,7 +201,7 @@ export default function Contact() {
                   "
                 >
                   SYSTEM LOG
-                </h3>
+                </h2>
 
                 <p
                   className="
@@ -259,7 +259,7 @@ export default function Contact() {
                     md:p-8
                   "
                 >
-                  <h3
+                  <h2
                     className="
                       text-blue-400
                       text-lg
@@ -270,7 +270,7 @@ export default function Contact() {
                     "
                   >
                     SYSTEM INFORMATION
-                  </h3>
+                  </h2>
 
 
                   <div
@@ -325,9 +325,9 @@ export default function Contact() {
                       />
 
                       <div className="min-w-0">
-                        <h4 className="font-semibold">
+                        <h3 className="font-semibold">
                           Email
-                        </h4>
+                        </h3>
 
                         <a
                           href="https://mail.google.com/mail/?view=cm&fs=1&to=ssentababrian745@gmail.com"
@@ -395,9 +395,9 @@ export default function Contact() {
                       />
 
                       <div>
-                        <h4 className="font-semibold">
+                        <h3 className="font-semibold">
                           Phone / WhatsApp
-                        </h4>
+                        </h3>
 
                         <a
                           href="https://wa.me/256786485002"
@@ -464,9 +464,9 @@ export default function Contact() {
                       />
 
                       <div>
-                        <h4 className="font-semibold">
+                        <h3 className="font-semibold">
                           Location
-                        </h4>
+                        </h3>
 
                         <p
                           className="
@@ -527,9 +527,9 @@ export default function Contact() {
                       />
 
                       <div>
-                        <h4 className="font-semibold">
+                        <h3 className="font-semibold">
                           Response Time
-                        </h4>
+                        </h3>
 
                         <p
                           className="
@@ -555,7 +555,7 @@ export default function Contact() {
 
                 <div className="mt-8 md:mt-10">
 
-                  <h3
+                  <h2
                     className="
                       text-blue-400
                       text-sm
@@ -566,7 +566,7 @@ export default function Contact() {
                     "
                   >
                     CONNECT WITH ME
-                  </h3>
+                  </h2>
 
 
                   <div
@@ -832,7 +832,7 @@ export default function Contact() {
 
                 <div className="mt-8 md:mt-10">
 
-                  <h3
+                  <h2
                     className="
                       text-blue-400
                       text-sm
@@ -842,7 +842,7 @@ export default function Contact() {
                     "
                   >
                     AVAILABLE FOR
-                  </h3>
+                  </h2>
 
 
                   <div

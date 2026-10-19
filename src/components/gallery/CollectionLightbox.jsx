@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 
 import { createPortal } from "react-dom";
+import useDialogFocus from "../../hooks/useDialogFocus";
 
 
 export default function CollectionLightbox({
@@ -35,6 +36,7 @@ export default function CollectionLightbox({
     isOpen && items?.length > 0
       ? items[selectedIndex]
       : null;
+  const dialogRef = useDialogFocus(Boolean(isOpen && currentItem), () => setSelectedIndex(null), 280);
 
 
   // =========================================================
@@ -297,11 +299,15 @@ export default function CollectionLightbox({
     <AnimatePresence>
       {isOpen && currentItem && (
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-label="Artwork viewer"
+        tabIndex={-1}
         className="
           fixed
           inset-0
 
-          z-[80]
+          z-[280]
 
           bg-black/95
           backdrop-blur-md

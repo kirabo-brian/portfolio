@@ -12,15 +12,15 @@ const previews = import.meta.glob("../assets/previews/*.webp", {
 const imagesByUrl = new Map(Object.entries(originals).map(([path, url]) => {
   const entry = manifest[path.replace("../assets/gallery/", "")];
   if (!entry) return [url, null];
-  const variants = entry.variants.map((variant) => ({
+  const variants = (entry.cardVariants?.length ? entry.cardVariants : entry.variants).map((variant) => ({
     ...variant,
     src: previews[`../assets/previews/${variant.file}`],
   }));
   return [url, {
     src: variants.at(-1).src,
     srcSet: variants.map(({ src, width }) => `${src} ${width}w`).join(", "),
-    width: entry.width,
-    height: entry.height,
+    width: variants.at(-1).height ? variants.at(-1).width : entry.width,
+    height: variants.at(-1).height || entry.height,
   }];
 }));
 

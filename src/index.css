@@ -6,6 +6,13 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* Secondary text stays readable over the dark backgrounds. */
+.text-gray-500, .text-gray-600 { color: #a8b3c4; }
+:where(a, button, [role="button"]):focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 4px;
+}
+
 @media (max-width: 767px) {
   /* Opaque panels need less backdrop compositing while scrolling on phones. */
   [class*="backdrop-blur"] {

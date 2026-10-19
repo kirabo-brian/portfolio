@@ -5,10 +5,13 @@
   "type": "module",
   "scripts": {
     "optimize:images": "node scripts/optimize-images.mjs",
-    "predev": "npm run optimize:images",
-    "prebuild": "npm run optimize:images",
+    "optimize:videos": "node scripts/optimize-videos.mjs",
+    "optimize:media": "npm run optimize:images && npm run optimize:videos",
+    "predev": "npm run optimize:media",
+    "prebuild": "npm run optimize:media",
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "node scripts/build-page-metadata.mjs",
     "lint": "eslint .",
     "test:browser": "playwright test",
     "preview": "vite preview"
@@ -23,6 +26,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@playwright/test": "^1.64.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

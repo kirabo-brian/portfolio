@@ -15,6 +15,7 @@ import {
 import Background from "./components/layout/Background";
 import Navbar from "./components/layout/Navbar";
 import ScrollToTop from "./components/layout/ScrollToTop";
+import PageMetadata from "./components/layout/PageMetadata";
 
 import Home from "./pages/Home";
 const Gallery = lazy(() => import("./pages/Gallery"));
@@ -69,10 +70,7 @@ function AnimatedRoutes() {
           path="/gallery"
           element={
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
+              initial={false}
 
               animate={{
                 opacity: 1,
@@ -138,6 +136,7 @@ function App() {
     <BrowserRouter>
 
       <ScrollToTop />
+      <PageMetadata />
 
       <div
         className="

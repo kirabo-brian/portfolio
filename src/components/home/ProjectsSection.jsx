@@ -436,9 +436,9 @@ export default function ProjectsSection() {
 
                     font-black
 
-                    text-gray-800
+                    text-gray-400
 
-                    group-hover:text-blue-500/30
+                    group-hover:text-blue-300
 
                     transition-colors
                   "

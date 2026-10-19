@@ -1,19 +1,22 @@
 import { useEffect, useRef } from "react";
+import { videoPreview } from "../../data/videoPreviews";
 
 // Fetch decorative video only while visible on a desktop-sized viewport.
 // Phones, data-saving connections and reduced-motion users keep the poster.
 export default function PreviewVideo({ src, poster, className, ...props }) {
   const videoRef = useRef(null);
+  const preview = videoPreview(src);
 
   useEffect(() => {
     const video = videoRef.current;
-    const preference = window.matchMedia("(min-width: 768px) and (prefers-reduced-motion: no-preference)");
+    if (!preview) return;
+    const preference = window.matchMedia("(min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
     const connection = navigator.connection;
     let visible = false;
     const syncPlayback = () => {
       const allowed = preference.matches && !connection?.saveData;
       if (allowed && visible && document.visibilityState === "visible") {
-        if (!video.getAttribute("src")) video.src = src;
+        if (!video.getAttribute("src")) video.src = preview;
         video.play().catch(() => {});
       } else {
         video.pause();
@@ -40,7 +43,7 @@ export default function PreviewVideo({ src, poster, className, ...props }) {
       video.removeAttribute("src");
       video.load();
     };
-  }, [src]);
+  }, [preview]);
 
   return <video ref={videoRef} poster={poster} muted loop playsInline preload="none" className={className} {...props} />;
 }

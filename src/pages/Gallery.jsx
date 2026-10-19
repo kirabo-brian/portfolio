@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -7,8 +7,8 @@ import ResponsiveImage from "../components/media/ResponsiveImage";
 import PreviewVideo from "../components/media/PreviewVideo";
 import { previewUrl } from "../data/responsiveImages";
 
-import GalleryLightbox from "../components/gallery/GalleryLightbox";
-import CollectionModal from "../components/gallery/CollectionModal";
+const GalleryLightbox = lazy(() => import("../components/gallery/GalleryLightbox"));
+const CollectionModal = lazy(() => import("../components/gallery/CollectionModal"));
 
 import {
   featuredProjects,
@@ -369,6 +369,12 @@ export default function Gallery() {
         );
 
 
+  // Retain mounted viewers after first use so their exit animations can finish.
+  const [viewersLoaded, setViewersLoaded] = useState(false);
+  if (!viewersLoaded && (selectedCollection || selectedImage !== null)) {
+    setViewersLoaded(true);
+  }
+
   return (
     <div className="min-h-screen text-white">
 
@@ -376,22 +382,7 @@ export default function Gallery() {
           HERO
       ===================================================== */}
 
-      <motion.section
-        initial={{
-          opacity: 0,
-          y: 30,
-        }}
-
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-
-        transition={{
-          duration: 0.8,
-          ease: "easeOut",
-        }}
-
+      <section
         className="
           max-w-7xl
           mx-auto
@@ -460,7 +451,7 @@ export default function Gallery() {
           as a designer, content creator and aspiring
           game developer.
         </p>
-      </motion.section>
+      </section>
 
 
       {/* =====================================================
@@ -681,6 +672,14 @@ export default function Gallery() {
                 key={
                   project.title
                 }
+                role="button"
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    openFeaturedProject(index);
+                  }
+                }}
 
                 onClick={() =>
                   openFeaturedProject(
@@ -789,7 +788,7 @@ export default function Gallery() {
 
                       rounded-full
 
-                      bg-blue-500
+                      bg-blue-700
 
                       text-white
 
@@ -1163,6 +1162,7 @@ export default function Gallery() {
 
               <button
                 key={filter}
+                aria-pressed={activeFilter === filter}
 
                 type="button"
 
@@ -1284,6 +1284,14 @@ export default function Gallery() {
                   key={
                     collection.title
                   }
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      openCollection(collection);
+                    }
+                  }}
 
                   onClick={() =>
                     openCollection(
@@ -1667,6 +1675,7 @@ export default function Gallery() {
           FEATURED WORK LIGHTBOX
       ===================================================== */}
 
+      {viewersLoaded && <Suspense fallback={<p role="status" className="fixed bottom-6 left-6 z-[300] rounded bg-slate-950 p-4 text-white">Loading viewer…</p>}>
       <GalleryLightbox
         images={
           featuredProjects
@@ -1708,6 +1717,7 @@ export default function Gallery() {
           closeCollection
         }
       />
+      </Suspense>}
 
 
       <Footer />

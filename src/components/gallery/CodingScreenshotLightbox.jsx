@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import useDialogFocus from "../../hooks/useDialogFocus";
 
 export default function CodingScreenshotLightbox({
   project,
@@ -23,6 +24,7 @@ export default function CodingScreenshotLightbox({
     isOpen
       ? screenshots[selectedIndex]
       : null;
+  const dialogRef = useDialogFocus(Boolean(isOpen && currentScreenshot), () => setSelectedIndex(null), 300);
 
 
   // =========================================================
@@ -187,10 +189,14 @@ export default function CodingScreenshotLightbox({
     <AnimatePresence>
       {isOpen && currentScreenshot && (
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-label="Project screenshot"
+        tabIndex={-1}
         className="
           fixed
           inset-0
-          z-[120]
+          z-[300]
 
           bg-black/95
           backdrop-blur-lg

@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 src/assets/previews/
+src/assets/video-previews/
+public/social-card.jpg
 test-results/
 playwright-report/
 *.local

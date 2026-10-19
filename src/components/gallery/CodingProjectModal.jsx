@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import ResponsiveImage from "../media/ResponsiveImage";
+import useDialogFocus from "../../hooks/useDialogFocus";
 
 export default function CodingProjectModal({
   project,
@@ -8,16 +9,21 @@ export default function CodingProjectModal({
   onOpenScreenshot,
   screenshotOpen = false,
 }) {
+  const dialogRef = useDialogFocus(Boolean(project), onClose, 260);
   const hasCover = Boolean(project?.cover);
 
   const modal = (
     <AnimatePresence>
       {project && (
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-label={project.title}
+        tabIndex={-1}
         className={`
           fixed
           inset-0
-          z-[100]
+          z-[260]
 
           bg-black/95
           backdrop-blur-lg
